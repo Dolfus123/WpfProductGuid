@@ -1,0 +1,82 @@
+﻿<Window x:Class="ProductGuide1._0.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:ProductGuide1._0.Model" d:DataContext="{d:DesignInstance Type=model:Product}"
+        mc:Ignorable="d"
+        Title="Справочник товаров" Height="600" Width="850">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="MinWidth" Value="30" />
+            <Setter Property="Margin" Value="3,0,3,0" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <UniformGrid DockPanel.Dock="Bottom" Rows="1" Grid.Row="0" Margin="0,0,300,0">
+            <Label Content="Поиск по :" Margin="0,0,0,0"/>
+            <ComboBox Height="20" VerticalAlignment="Center" Width="120" Margin="15,0,15,0" Text="{Binding SwitchSort, UpdateSourceTrigger=PropertyChanged}" >
+                <ComboBoxItem>Наименование</ComboBoxItem>
+                <ComboBoxItem>Код</ComboBoxItem>
+                <ComboBoxItem>БарКод</ComboBoxItem>
+                <ComboBoxItem>Цена</ComboBoxItem>
+            </ComboBox>
+            <TextBox Grid.Column="0" Height="20" Width="120" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0"/>
+        </UniformGrid>
+        <DataGrid Grid.Row="1" x:Name="productsGrid" 
+                  ItemsSource="{Binding Products}"
+                  AutoGenerateColumns="False"
+                  VerticalGridLinesBrush="DarkGray"
+                  AlternatingRowBackground="LightGray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Наименование товара" Binding="{Binding Path=Name}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Код товара" Binding="{Binding Path=Code}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Path=Price.Price}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Количество" Binding="{Binding Path=Quantity}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Размер" Binding="{Binding Path=Size}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="БарКод" Binding="{Binding Path=BarCode}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Модель" Binding="{Binding Path=Model}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Цвет" Binding="{Binding Path=Color}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Высота" Binding="{Binding Path=Wight}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Сорт" Binding="{Binding Path=Sort}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Последнее изменение" Binding="{Binding Path=DateChanges}" Width="*" IsReadOnly="True"/>
+            </DataGrid.Columns>
+            </DataGrid>
+        <UniformGrid DockPanel.Dock="Bottom" Rows="1" Grid.Row="2" Margin="0,3">
+            <Button Content="Добавить" Command="{Binding AddCommand}"/>
+            <Button Content="Изменить" Command="{Binding EditCommand}" CommandParameter="{Binding ElementName=productsGrid, Path=SelectedItem}">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="MinWidth" Value="30" />
+                    <Setter Property="Margin" Value="3,0,3,0" />
+                    <Setter Property="IsEnabled" Value="True" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=productsGrid, Path=SelectedItem}" Value="{x:Null}" >
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            </Button>
+            <Button Content="Удалить" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=productsGrid}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="MinWidth" Value="30" />
+                        <Setter Property="Margin" Value="3,0,3,0" />
+                        <Setter Property="IsEnabled" Value="True" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem, ElementName=productsGrid}" Value="{x:Null}" >
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </UniformGrid>
+    </Grid>
+</Window>
